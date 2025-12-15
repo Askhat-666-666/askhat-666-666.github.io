@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>SS7 Shop — Crypto Payment</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body { margin:0; padding:0; background:#000; color:#00ff66; font-family:"Courier New", monospace; }
+    .terminal { width:100vw; background:rgba(0,0,0,0.9); border:1px solid #00ff66; box-shadow:0 0 20px #00ff66; padding:20px; box-sizing:border-box; }
+    .title { margin-bottom:20px; font-size:16px; }
+    .wallet-select { display:flex; gap:10px; margin-bottom:20px; }
+    .select-btn { padding:8px 12px; background:#000; color:#00ff66; border:1px solid #00ff66; cursor:pointer; }
+    .select-btn.active, .select-btn:hover { background:#00ff66; color:#000; }
+    .wallet { border:1px dashed #00ff66; padding:15px; margin-bottom:20px; }
+    .wallet span { display:block; margin-top:8px; word-break:break-all; }
+    .timer { border:1px solid #00ff66; padding:15px; margin-top:30px; font-size:16px; }
+    .expired { color:red; }
+    a { color:#00ff66; text-decoration:none; }
+  </style>
+</head>
+<body>  <div class="terminal">
+    <div class="title">root@SS7shop:~$ PAYMENT_SESSION</div><div class="wallet-select">
+  <button class="select-btn" data-target="usdt">USDT (TRC20)</button>
+  <button class="select-btn" data-target="btc">BTC</button>
+  <button class="select-btn" data-target="eth">ETH</button>
+</div>
+
+<div class="wallet" id="usdt">
+  CRYPTO: USDT (TRC20)
+  <span>ADDRESS: YOUR_USDT_TRC20_ADDRESS</span>
+</div>
+
+<div class="wallet" id="btc" style="display:none;">
+  CRYPTO: BTC
+  <span>ADDRESS: YOUR_BTC_ADDRESS</span>
+</div>
+
+<div class="wallet" id="eth" style="display:none;">
+  CRYPTO: ETH
+  <span>ADDRESS: YOUR_ETH_ADDRESS</span>
+</div>
+
+<div class="timer" id="timer">
+  TIME LEFT: 30:00
+</div>
+
+<p style="margin-top:20px; font-size:13px;">
+  after you pay send the payment link/txid to our support in telegram - @SS7Shop_Support.<br>
+  <a href="index.html">← BACK TO SHOP</a>
+</p>
+
+<p style="margin-top:40px; font-size:12px; opacity:0.7;">
+  ©SS7 Shop • Secure Channel • Cloudflare Protected
+</p>
+
+  </div><script>
+  // TIMER
+  let time = 30 * 60; // 30 минут
+  const timerEl = document.getElementById('timer');
+  const interval = setInterval(() => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    timerEl.textContent = `TIME LEFT: ${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+    if (time <= 0) {
+      clearInterval(interval);
+      timerEl.textContent = 'SESSION EXPIRED';
+      timerEl.classList.add('expired');
+    }
+    time--;
+  }, 1000);
+
+  // WALLET SELECT
+  const buttons = document.querySelectorAll('.select-btn');
+  const wallets = document.querySelectorAll('.wallet');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const target = btn.dataset.target;
+      wallets.forEach(w => w.style.display = (w.id === target) ? 'block' : 'none');
+    });
+  });
+  // default
+  buttons[0].click();
+</script></body>
+</html>
